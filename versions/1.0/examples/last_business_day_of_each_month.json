@@ -1,0 +1,19 @@
+{
+    "$schema": "../schema.json",
+    "description": "Deadline for monthly reports.",
+    "schedule": {
+        "from": "2025-09-01T00:00:00Z",
+        "repeat": {
+            "frequency": "monthly"
+        },
+        "modify": {
+            "on": {
+                "day_of_week": ["mo", "tu", "we", "th", "fr"],
+                "position": -1
+            },
+            "at": {
+                "time": ["17:00:00Z"]
+            }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "markdown.validate.enabled": true,
+    "cSpell.words": [
+        "chinese",
+        "gregorian",
+        "islamic",
+        "RRULE"
+    ]
+}

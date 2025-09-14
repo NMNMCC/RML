@@ -1,0 +1,18 @@
+{
+    "$schema": "../schema.json",
+    "description": "Mid-Autumn Festival.",
+    "schedule": {
+        "calendar": "chinese",
+        "from": "2025-10-06T00:00:00+08:00",
+        "timezone": "Asia/Shanghai",
+        "repeat": {
+            "frequency": "yearly"
+        },
+        "modify": {
+            "on": {
+                "month": [8],
+                "day_of_month": [15]
+            }
+        }
+    }
+}

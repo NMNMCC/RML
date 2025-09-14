@@ -1,0 +1,174 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://nmnm.cc/schema/rml/1.0.json",
+    "title": "Recurrence Markup Language (RML)",
+    "description": "A schema for defining recurring tasks and events.",
+    "type": "object",
+    "properties": {
+        "description": {
+            "description": "An optional, human-readable description for the recurring task.",
+            "type": "string"
+        },
+        "schedule": {
+            "$ref": "#/$defs/schedule"
+        }
+    },
+    "required": ["schedule"],
+    "$defs": {
+        "schedule": {
+            "type": "object",
+            "properties": {
+                "calendar": {
+                    "description": "The calendar system to use for rule calculation.",
+                    "type": "string",
+                    "enum": ["gregorian", "chinese", "hebrew", "islamic"],
+                    "default": "gregorian"
+                },
+                "from": {
+                    "description": "The anchor date/time for the recurrence calculation, in ISO 8601 format.",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "timezone": {
+                    "description": "The IANA timezone name for interpreting the schedule.",
+                    "type": "string"
+                },
+                "repeat": {
+                    "$ref": "#/$defs/repeat"
+                },
+                "modify": {
+                    "$ref": "#/$defs/modify"
+                },
+                "limit": {
+                    "$ref": "#/$defs/limit"
+                },
+                "exclude": {
+                    "$ref": "#/$defs/exclude"
+                }
+            },
+            "required": ["from", "repeat"]
+        },
+        "repeat": {
+            "type": "object",
+            "properties": {
+                "frequency": {
+                    "description": "The base unit for the recurrence.",
+                    "type": "string",
+                    "enum": [
+                        "yearly",
+                        "monthly",
+                        "weekly",
+                        "daily",
+                        "hourly",
+                        "minutely"
+                    ]
+                },
+                "interval": {
+                    "description": "The interval for the frequency, e.g., every 2 weeks.",
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1
+                }
+            },
+            "required": ["frequency"]
+        },
+        "modify": {
+            "type": "object",
+            "properties": {
+                "on": {
+                    "$ref": "#/$defs/on_rules"
+                },
+                "at": {
+                    "$ref": "#/$defs/at_rules"
+                }
+            }
+        },
+        "on_rules": {
+            "type": "object",
+            "properties": {
+                "month": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            { "type": "integer", "minimum": 1, "maximum": 12 },
+                            {
+                                "type": "string",
+                                "description": "Used for leap months, e.g., '4L'",
+                                "pattern": "^(1[0-2]|[1-9])L$"
+                            }
+                        ]
+                    }
+                },
+                "day_of_month": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": -31,
+                        "maximum": 31
+                    }
+                },
+                "day_of_week": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": ["mo", "tu", "we", "th", "fr", "sa", "su"]
+                    }
+                },
+                "day_of_year": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": -366,
+                        "maximum": 366
+                    }
+                },
+                "position": {
+                    "description": "Selects the Nth occurrence within a frequency period (e.g., the 2nd Tuesday of the month). -1 means the last.",
+                    "type": "integer"
+                }
+            }
+        },
+        "at_rules": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "array",
+                    "items": { "type": "string", "format": "time" }
+                }
+            },
+            "required": ["time"]
+        },
+        "limit": {
+            "type": "object",
+            "description": "Defines the end condition for the recurrence. Use 'count' or 'until', but not both.",
+            "properties": {
+                "count": {
+                    "description": "The total number of occurrences.",
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "until": {
+                    "description": "The end date/time for the recurrence.",
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "oneOf": [
+                { "required": ["count"] },
+                { "required": ["until"] }
+            ]
+        },
+        "exclude": {
+            "type": "object",
+            "properties": {
+                "dates": {
+                    "type": "array",
+                    "items": { "type": "string", "format": "date" }
+                },
+                "on": {
+                    "$ref": "#/$defs/on_rules"
+                }
+            }
+        }
+    }
+}
